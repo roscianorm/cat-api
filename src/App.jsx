@@ -2,7 +2,7 @@ import useCatFact from './hooks/useCatFact.js';
 import useCatImage from './hooks/useCatImage.js';
 import '/style.css';
 
-import Other from './components/Other.jsx';
+// import Other from './components/Other.jsx';
 
 const FILE_ERROR = (
 	<svg
@@ -36,10 +36,10 @@ export default function App() {
 			<button className="refresh-btn" type="button" onClick={handleClick}>
 				Refresh
 			</button>
-			{imageUrl ? <img src={imageUrl} alt="" width="450px" /> : FILE_ERROR}
+			{imageUrl && <img src={imageUrl} alt="" width="450px" id="catImg" />}
 			{fact && <p>{fact}</p>}
-			<Other fact="Cats are awesome" />
 			{/*
+				<Other fact="Cats are awesome" />
 				<Other fact="Cats rule" />
 				<Other fact="Cats" /> 
 			*/}
