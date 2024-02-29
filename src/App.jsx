@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import { getRandomCatFact } from './services/facts';
-import { getRandomImageWithText } from './services/image';
+import useCatFact from './hooks/useCatFact.js';
+import useCatImage from './hooks/useCatImage.js';
 import '/style.css';
+
+import Other from './components/Other.jsx';
 
 const FILE_ERROR = (
 	<svg
@@ -24,29 +25,10 @@ const FILE_ERROR = (
 );
 
 export default function App() {
-	const [fact, setFact] = useState();
-	const [imageWithText, setImageWithText] = useState();
+	const { fact, refreshFact } = useCatFact();
+	const { imageUrl } = useCatImage({ fact });
 
-	// Get random fact
-	useEffect(() => {
-		getRandomCatFact().then((newFact) => {
-			setFact(newFact);
-		});
-		// OR
-		// getRandomCatFact().then(setFact);
-	}, []);
-
-	// Get random image with the first three words of the fact
-	useEffect(() => {
-		getRandomImageWithText(fact).then((newImageWithText) =>
-			setImageWithText(newImageWithText)
-		);
-	}, [fact]);
-
-	const handleClick = async () => {
-		const newFact = await getRandomCatFact();
-		setFact(newFact);
-	};
+	const handleClick = async () => await refreshFact();
 
 	return (
 		<main>
@@ -54,13 +36,13 @@ export default function App() {
 			<button className="refresh-btn" type="button" onClick={handleClick}>
 				Refresh
 			</button>
-			{imageWithText ? (
-				<img src={imageWithText} alt="" width="450px" />
-			) : (
-				FILE_ERROR
-			)}
-
+			{imageUrl ? <img src={imageUrl} alt="" width="450px" /> : FILE_ERROR}
 			{fact && <p>{fact}</p>}
+			<Other fact="Cats are awesome" />
+			{/*
+				<Other fact="Cats rule" />
+				<Other fact="Cats" /> 
+			*/}
 		</main>
 	);
 }
