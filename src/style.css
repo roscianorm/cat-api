@@ -1,5 +1,25 @@
 body {
 	font-family: system-ui;
 	color: #ffffff;
-	background-color: #2b2b2b;
+	background-color: hsl(0, 0%, 17%);
+}
+main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	max-width: 500px;
+	margin: 0 auto;
+}
+.refresh-btn {
+	color: #ffffff;
+	background-color: #635994;
+	border: none;
+	padding: 10px 15px;
+	margin-bottom: 10px;
+	cursor: pointer;
+	border-radius: 5px;
+	font-weight: bold;
+}
+.refresh-btn:hover {
+	box-shadow: 0 0 10px #635994;
 }

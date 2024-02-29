@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-
+import useCatFact from './hooks/useCatFact.js';
+import useCatImage from './hooks/useCatImage.js';
 import '/style.css';
 
-const CAT_ENDPOINT_RANDOM_FACT = 'https://catfact.ninja/fact';
-const CAT_ENDPOINT_IMAGE_URL = 'https://cataas.com/cat';
+// import Other from './components/Other.jsx';
+
 const FILE_ERROR = (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
@@ -25,66 +25,24 @@ const FILE_ERROR = (
 );
 
 export default function App() {
-	const [fact, setFact] = useState();
-	const [imageWithText, setImageWithText] = useState();
+	const { fact, refreshFact } = useCatFact();
+	const { imageUrl } = useCatImage({ fact });
 
-	// Get random fact
-	useEffect(() => {
-		fetch(CAT_ENDPOINT_RANDOM_FACT)
-			.then((res) => {
-				if (!res.ok) {
-					setFact('An error occurred, please try again.');
-					return;
-				}
-				return res.json();
-			})
-			.then((data) => {
-				const { fact } = data;
-				setFact(fact);
-			})
-			.catch((err) => {
-				// Triggers only when there's an error with the request not the response
-				setFact('An error occurred, please try again.');
-				console.error(err);
-			});
-	}, []);
-
-	// Get random image with the first three words of the fact
-	useEffect(() => {
-		if (!fact) return;
-
-		// const firstWord = fact.split(' ')[0];
-		const firstThreeWords = fact.split(' ').slice(0, 3).join('%20');
-		// console.log({ firstWord, firstThreeWords });
-
-		fetch(
-			`${CAT_ENDPOINT_IMAGE_URL}/says/${firstThreeWords}?fontSize=50&fontColor=white`
-		)
-			.then((res) => {
-				if (!res.ok) {
-					setImageWithText(null);
-					return;
-				}
-				const { url } = res;
-				setImageWithText(url);
-			})
-			.catch((err) => {
-				setImageWithText(null);
-				console.log(err);
-			});
-	}, [fact]);
+	const handleClick = async () => await refreshFact();
 
 	return (
 		<main>
 			<h1>Cats App 🐈‍⬛</h1>
-
-			{imageWithText ? (
-				<img src={imageWithText} alt="" width="450px" />
-			) : (
-				FILE_ERROR
-			)}
-
+			<button className="refresh-btn" type="button" onClick={handleClick}>
+				Refresh
+			</button>
+			{imageUrl && <img src={imageUrl} alt="" width="450px" id="catImg" />}
 			{fact && <p>{fact}</p>}
+			{/*
+				<Other fact="Cats are awesome" />
+				<Other fact="Cats rule" />
+				<Other fact="Cats" /> 
+			*/}
 		</main>
 	);
 }
